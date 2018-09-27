@@ -1,0 +1,187 @@
+ /dts-v1/;
+
+ #include "osd335x-sm.dtsi"
+
+ / {
+
+ 	leds {
+ 		pinctrl-names = "default", "sleep";
+ 		pinctrl-0 = <&user_leds_default>;
+ 		pinctrl-1 = <&user_leds_sleep>;
+
+ 		compatible = "gpio-leds";
+
+ 		led@2 {
+ 			label = "beaglebone:green:usr0";
+ 			gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "mmc0";
+ 			default-state = "off";
+ 		};
+
+ 		led@3 {
+ 			label = "beaglebone:green:usr1";
+ 			gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "cpu0";
+ 			default-state = "off";
+ 		};
+ 	};
+
+ 	vmmcsd_fixed: fixedregulator@0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vmmcsd_fixed";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ };
+
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins>;
+
+ 	status = "okay";
+ };
+
+ &usb {
+ 	status = "okay";
+ };
+
+ &usb_ctrl_mod {
+ 	status = "okay";
+ };
+
+ &usb0_phy {
+ 	status = "okay";
+ };
+
+ &usb1_phy {
+ 	status = "okay";
+ };
+
+ &usb0 {
+ 	status = "okay";
+ 	dr_mode = "peripheral";
+ };
+
+ &usb1 {
+ 	status = "okay";
+ 	dr_mode = "host";
+ };
+
+ &cppi41dma  {
+ 	status = "okay";
+ };
+
+&ldo3_reg {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	regulator-always-on;
+};
+
+&mmc1 {
+  status = "okay";
+  bus-width = <0x4>;
+  pinctrl-names = "default";
+  pinctrl-0 = <&mmc1_pins>;
+  cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+  vmmc-supply = <&vmmcsd_fixed>;
+};
+
+&cpu0_opp_table {
+	/*
+	 * All PG 2.0 silicon may not support 1GHz but some of the early
+	 * BeagleBone Blacks have PG 2.0 silicon which is guaranteed
+	 * to support 1GHz OPP so enable it for PG 2.0 on this board.
+	 */
+	oppnitro@1000000000 {
+		opp-supported-hw = <0x06 0x0100>;
+	};
+};
+
+&tscadc {
+	status = "okay";
+};
+
+&am335x_adc {
+	ti,adc-channels = <0 1 2 3 4 5 6 7>;
+};
+
+&aes {
+	status = "okay";
+};
+
+&sham {
+	status = "okay";
+};
+
+&wkup_m3_ipc {
+	ti,scale-data-fw = "am335x-bone-scale-data.bin";
+};
+
+&rtc {
+	clocks = <&clk_32768_ck>, <&clkdiv32k_ick>;
+	clock-names = "ext-clk", "int-clk";
+	system-power-controller;
+};
+
+&sgx {
+	status = "okay";
+};
+
+&am33xx_pinmux {
+
+user_leds_default: user_leds_default {
+  pinctrl-single,pins = <
+    AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
+    AM33XX_IOPAD(0x844, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
+  >;
+};
+
+user_leds_sleep: user_leds_sleep {
+  pinctrl-single,pins = <
+    AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
+    AM33XX_IOPAD(0x844, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
+  >;
+};
+
+i2c0_pins: pinmux_i2c0_pins {
+  pinctrl-single,pins = <
+    AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
+    AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
+  >;
+};
+
+uart0_pins: pinmux_uart0_pins {
+  pinctrl-single,pins = <
+    AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
+    AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
+  >;
+};
+
+mmc1_pins: pinmux_mmc1_pins {
+  pinctrl-single,pins = <
+    AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
+  >;
+};
+
+};
+
+&i2c0 {
+
+  baseboard_eeprom: baseboard_eeprom@50 {
+    compatible = "at,24c256";
+    reg = <0x50>;
+
+    #address-cells = <1>;
+    #size-cells = <1>;
+    baseboard_data: baseboard_data@0 {
+      reg = <0 0x100>;
+    };
+  };
+
+};
+
+/ {
+	model = "SWMS Linux Test Board";
+	compatible = "swms,swmw-ltb", "ti,am335x-bone", "ti,am33xx";
+};
+
