@@ -150,37 +150,37 @@
 &am33xx_pinmux {
 
 	user_leds_default: user_leds_default {
-	  pinctrl-single,pins = <
-		AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
-		AM33XX_IOPAD(0x844, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
-	  >;
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
+			AM33XX_IOPAD(0x844, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
+		>;
 	};
 
 	user_leds_sleep: user_leds_sleep {
-	  pinctrl-single,pins = <
-		AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
-		AM33XX_IOPAD(0x844, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
-	  >;
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a0.gpio1_16 */
+			AM33XX_IOPAD(0x844, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
+		>;
 	};
 
 	i2c0_pins: pinmux_i2c0_pins {
-	  pinctrl-single,pins = <
-		AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
-		AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
-	  >;
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)		/* i2c0_sda.i2c0_sda */
+			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)		/* i2c0_scl.i2c0_scl */
+		>;
 	};
 
 	uart0_pins: pinmux_uart0_pins {
-	  pinctrl-single,pins = <
-		AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-		AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-	  >;
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)		/* uart0_rxd.uart0_rxd */
+			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
+		>;
 	};
 
 	mmc1_pins: pinmux_mmc1_pins {
-	  pinctrl-single,pins = <
-		AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
-	  >;
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
+		>;
 	};
 	
 	cpsw_default: cpsw_default {
@@ -232,6 +232,12 @@
 			/* MDIO reset value */
 			AM33XX_IOPAD(0x948, PIN_INPUT_PULLDOWN | MUX_MODE7)
 			AM33XX_IOPAD(0x94c, PIN_INPUT_PULLDOWN | MUX_MODE7)
+		>;
+	};
+	
+	ethernet_interrupt: ethernet_interrupt {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x908, PIN_INPUT_PULLDOWN | MUX_MODE7) 	/* mii1_col.gpio3_0 */
 		>;
 	};
 
