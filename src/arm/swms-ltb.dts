@@ -237,7 +237,7 @@
 	
 	ethernet_interrupt: ethernet_interrupt {
 		pinctrl-single,pins = <
-			AM33XX_IOPAD(0x908, PIN_INPUT_PULLDOWN | MUX_MODE7) 	/* mii1_col.gpio3_0 */
+			AM33XX_IOPAD(0x908, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 */
 		>;
 	};
 
