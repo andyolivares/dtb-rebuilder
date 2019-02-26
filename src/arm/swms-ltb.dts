@@ -98,8 +98,8 @@
 };
 
 &cpsw_emac0 {
-	phy_id = <&davinci_mdio>, <4>;
-	phy-mode = "rgmii-txid";
+	phy_id = <&davinci_mdio>, <0>;
+	phy-mode = "mii";
 };
 
 &mac {
@@ -138,13 +138,28 @@
 };
 
 &rtc {
-	/*clocks = <&clk_32768_ck>, <&clkdiv32k_ick>;
-	clock-names = "ext-clk", "int-clk";*/
+	clocks = <&clk_32768_ck>, <&clkdiv32k_ick>;
+	clock-names = "ext-clk", "int-clk";
 	system-power-controller;
 };
 
 &sgx {
 	status = "okay";
+};
+
+&i2c0 {
+
+	baseboard_eeprom: baseboard_eeprom@50 {
+		compatible = "at,24c256";
+		reg = <0x50>;
+
+		#address-cells = <1>;
+		#size-cells = <1>;
+		baseboard_data: baseboard_data@0 {
+		  reg = <0 0x100>;
+		};
+	};
+
 };
 
 &am33xx_pinmux {
@@ -186,24 +201,30 @@
 	cpsw_default: cpsw_default {
 		pinctrl-single,pins = <
 			/* Slave 1 */
-			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txen.rgmii1_tctl */
-			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE2)		/* mii1_rxdv.rgmii1_rctl */
-			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd3.rgmii1_txd3 */
-			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd2.rgmii1_txd2 */
-			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd1 */
-			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd0 */
-			AM33XX_IOPAD(0x92c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txclk.rgmii1_txclk */
-			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE2)		/* mii1_rxclk.rgmii1_rxclk */
-			AM33XX_IOPAD(0x934, PIN_INPUT_PULLDOWN | MUX_MODE2)		/* mii1_rxd3.rgmii1_rxd3 */
-			AM33XX_IOPAD(0x938, PIN_INPUT_PULLDOWN | MUX_MODE2)		/* mii1_rxd2.rgmii1_rxd2 */
-			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE2)		/* mii1_rxd1.rgmii1_rxd1 */
-			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE2)		/* mii1_rxd0.rgmii1_rxd0 */
+			0x108 (PIN_INPUT | MUX_MODE0)							/* mii1_col.mii1_col */
+			0x10c (PIN_INPUT | MUX_MODE0)							/* mii1_crs.mii1_crs */
+			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxerr.mii1_rxerr */
+			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txen.mii1_txen */
+			AM33XX_IOPAD(0x918, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxdv.mii1_rxdv */
+			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd3.mii1_txd3 */
+			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd2.mii1_txd2 */
+			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd1.mii1_txd1 */
+			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd0.mii1_txd0 */
+			AM33XX_IOPAD(0x92c, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_txclk.mii1_txclk */
+			AM33XX_IOPAD(0x930, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxclk.mii1_rxclk */
+			AM33XX_IOPAD(0x934, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxd3.mii1_rxd3 */
+			AM33XX_IOPAD(0x938, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxd2.mii1_rxd2 */
+			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxd1.mii1_rxd1 */
+			AM33XX_IOPAD(0x940, PIN_INPUT_PULLUP | MUX_MODE0)		/* mii1_rxd0.mii1_rxd0 */
 		>;
 	};
 	
 	cpsw_sleep: cpsw_sleep {
 		pinctrl-single,pins = <
 			/* Slave 1 reset value */
+			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)
+			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+			AM33XX_IOPAD(0x910, PIN_INPUT_PULLDOWN | MUX_MODE7)
 			AM33XX_IOPAD(0x914, PIN_INPUT_PULLDOWN | MUX_MODE7)
 			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE7)
 			AM33XX_IOPAD(0x91c, PIN_INPUT_PULLDOWN | MUX_MODE7)
@@ -235,26 +256,11 @@
 		>;
 	};
 	
-	ethernet_interrupt: ethernet_interrupt {
+	/*ethernet_interrupt: ethernet_interrupt {
 		pinctrl-single,pins = <
 			AM33XX_IOPAD(0x908, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 */
 		>;
-	};
-
-};
-
-&i2c0 {
-
-	baseboard_eeprom: baseboard_eeprom@50 {
-		compatible = "at,24c256";
-		reg = <0x50>;
-
-		#address-cells = <1>;
-		#size-cells = <1>;
-		baseboard_data: baseboard_data@0 {
-		  reg = <0 0x100>;
-		};
-	};
+	};*/
 
 };
 
